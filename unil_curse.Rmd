@@ -1,0 +1,39 @@
+---
+title: "The Unilateralist’s Curse – Summary and Commentary"
+author: "David Laing"
+date: '2016-12-31'
+output: github_document
+---
+
+In social epistemology, there is a phenomenon called the *unilateralist's curse*. It occurs when...
+
+- There is a group of altruistic decision-makers, *and*...
+- Each of them must independently decide whether to undertake a given initiative, *and*...
+- The value of the initiative is ambiguous; that is, there is some variance in people's judgments of the initiative's value, *and*...
+- The true value of the initiative is negative.
+
+The curse is that in these situations, negative initiatives will be undertaken more often than they should be. This happens because all that is required for the initiative to be undertaken is for a single agent to decide that it would do some good. And there are three potential conditions that could lead to this:
+
+- The variance of the judgments is especially high, *or*...
+- The sample mean judgment is especially close to zero (i.e. neutral — the initiative does neither harm nor good), *or*...
+- There are especially many agents making the judgment of whether or not to undertake the initiative.
+
+Say there are ten people, each of whom has access to some sort of ethically ambiguous classified government information. Each of them has the option of leaking it. For the sake of argument, let's assume that leaking the information would do more harm than good. Since crowds are usually smart, the average judgment of the value of leaking the information will be negative, thus causing most people to correctly withold the information. Unfortunately, all it takes is a single person to leak the information:
+
+```{r unil_vis, echo = FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+set.seed(6)
+judgments <- rnorm(n = 10, mean = -1, sd = 0.6)
+people <- c("Alice", "Bob", "Charlie", "Dan", "Erin", "Frank", "Grace", "Heidi", "Irene", "Jerry")
+unil_data <- data.frame(person = people, judgment = judgments)
+ggplot(data = unil_data) + 
+        geom_point(aes(x = person, y = judgment), stat = "identity", shape = 19, size = 5) +
+        coord_flip() +
+        geom_hline(yintercept = -1, color = "black") +
+        geom_hline(yintercept = 0, color = "red") + theme(plot.subtitle = element_text(vjust = 1), 
+    plot.caption = element_text(vjust = 1)) +labs(title = "The unilateralist’s curse", 
+    x = "Person", y = "Judgment of the value of the initiative") +
+        geom_text(aes(label = "True value ->", x = 10, y = -1.21)) +
+        geom_text(aes(label = "Threshold at which the", x = 10, y = -0.38)) +
+        geom_text(aes(label = "initiative is undertaken ->", x = 9.5, y = -0.35))
+```
